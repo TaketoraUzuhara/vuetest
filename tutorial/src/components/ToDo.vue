@@ -3,18 +3,9 @@
     this is test
     <input v-model="NewToDo" type="text" placeholder="enter your new to-do list" class="AddToDo" @keyup.enter="AddToDo">
 
-    <div v-for="(todo, Index) in todosFilter" :key="todo.id" class="todo-item">
-        <div class="check-box"><input type="checkbox" v-model="todo.completed"></div>
-        <div class="item-title">
-            <div v-if="!todo.editing" class="item-title-true" @dblclick="EditItem(todo)" :class="{ completed : todo.completed}">
-                {{ todo.title }}
-            </div>
-            <input v-else type="text" class="item-title-edit" v-model="todo.title" @blur="EditDone(todo)" @keyup.enter="EditDone(todo)" @keyup.esc="EditCancel(todo)">
-        </div>
-        <div class="delete-button">
-            <button v-on:click="DeleteItem(Index)">Delete</button>
-        </div>
-    </div>
+    <ToDoItem v-for="(todo, index) in todosFilter" :key="todo.id" :todo="todo" :index="index" :checkAll="!anyRemaining"
+    @DeleteItem="DeleteItem"  @EditDone="EditFinished" >
+    </ToDoItem>
     <div class="extra-container">
         <div><label><input type="checkbox" class="check-all-box" :checked="!anyRemaining" @change="checkAllItems">check all</label></div>
         <div class="remain-items">{{ remaining }} items left</div>
@@ -32,8 +23,13 @@
 </template>
 
 <script>
+import ToDoItem from "./ToDoItem.vue";
+
 export default {
   name: 'todo-list',
+  components: {
+      ToDoItem,
+  },
   data (){
       return{
           NewToDo: '',
@@ -93,27 +89,14 @@ export default {
           this.NewToDo = ''
           this.idToDo++
       },
-      EditItem(todo){
-          this.EditCashe = todo.title
-          todo.editing = true
-      },
-      EditDone(todo){
-          if(todo.title==''){
-              todo.title = this.EditCashe
-          }
-          todo.editing = false
-      },
-      EditCancel(todo){
-          todo.title = this.EditCashe
-      },
-      DeleteItem(Index){
-          this.todos.splice(Index, 1)
-      },
       checkAllItems() {
           this.todos.forEach((todo) => todo.completed = event.target.checked)
       },
       clearCompleted() {
           this.todos = this.todos.filter((todo) => !todo.completed)
+      },
+      EditFinished(data){
+          this.todos.splice(data.index, 1 , data.todo)
       }
   }
   
@@ -128,22 +111,8 @@ export default {
         margin-top: 10px;
         padding: 10px;     
     }
-    .todo-item{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 10px 0;
-        text-align: left;
-    }
-    .item-title-edit{
-        font-size: 24px;
-        color: #2c3e50;
-        width: 100%;
-        padding: 10px;
-    }
-    .completed{
-        text-decoration: line-through;
-    }
+    
+    
     .extra-container{
         font-size: 18px;
         display: flex;
