@@ -13,22 +13,35 @@ export default {
 
 <style>
     .crossbutton{
-        width: 100%;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        background-color: gray;
+        background-color: #dcdcdc;
+        position: absolute;
+        right: 0;
+        margin-top: 10%;
+        margin-right: 10%;
     }
     .line1{
-        width: 4px;
-        height: 2px;
-        background-color: #000;
+        width: 80%;
+        height: 1px;
+        display: block;
+        background: #000;
         border: none;
         transform: rotate(45deg);
+        position: absolute;
+        left: 10%;
+        top: 50%;
     }
     .line2{
-        width: 4px;
-        height: 2px;
-        background-color: #000;
+        width: 80%;
+        height: 1px;
+        display: block;
+        background: #000;
         border: none;
         transform: rotate(-45deg);
+        position: absolute;
+        top: 50%;
+        left: 10%;
     }
 </style>
